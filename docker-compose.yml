@@ -1,0 +1,34 @@
+version: '2'
+services:
+
+    ofbiz:
+        container_name: ofbiz
+        build: ./ofbiz
+        external_links:
+           - postgresql:postgresql
+        depends_on:
+           - postgresql
+        environment:
+          DOMAIN: "TEST"
+        ports:
+            - 5080:8080
+            - 5443:8443
+        restart: always
+
+    postgresql:
+        container_name: postgresql
+        build: postgres
+        environment:
+            POSTGRES_USER: ofbiz
+            POSTGRES_PASSWORD: ofbiz
+            OFBIZ_DB: ofbiz
+            OFBIZ_OLAP_DB: ofbiz
+            OFBIZ_TENANT_DB: ofbiz
+        ports:
+            - 5432:5432
+        volumes:
+            - pgdata:/var/lib/postgresql/data
+        restart: always
+
+volumes:
+    pgdata:
